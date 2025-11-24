@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一课：HTML是什么？- 网页的数据组织</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lesson-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .lesson-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .lesson-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .content-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        /* 引入环节样式 */
+        .intro-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .intro-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .intro-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .browser-demo {
+            background: #2d3748;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .demo-instruction {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .instruction-steps {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .instruction-steps li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+
+        .instruction-steps li:before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .instruction-steps {
+            counter-reset: step-counter;
+        }
+
+        /* 分层实践任务样式 */
+        .task-section {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .task-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .task-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .task-level {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .task-level.basic {
+            border-color: #4caf50;
+        }
+
+        .task-level.intermediate {
+            border-color: #ff9800;
+        }
+
+        .task-level.advanced {
+            border-color: #f44336;
+        }
+
+        .level-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-icon {
+            font-size: 1.5rem;
+        }
+
+        .basic .level-icon { color: #4caf50; }
+        .intermediate .level-icon { color: #ff9800; }
+        .advanced .level-icon { color: #f44336; }
+
+        .level-requirements {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .level-requirements li {
+            color: #555;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .level-requirements li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .task-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .task-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .task-btn.completed {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+        }
+
+        /* 代码编辑器样式 */
+        .code-editor {
+            background: #2d3748;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #e2e8f0;
+        }
+
+        .editor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .editor-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .editor-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+
+        .editor-title {
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 300px;
+            background: #1a202c;
+            color: #e2e8f0;
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        .code-textarea::placeholder {
+            color: #718096;
+        }
+
+        /* 快速评价样式 */
+        .quick-assessment {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .assessment-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .quiz-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .quiz-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e8;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .submit-quiz-btn {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-title {
+                font-size: 2rem;
+            }
+            
+            .task-levels {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lesson-container">
+        <!-- 课程头部 -->
+        <div class="lesson-header">
+            <h1 class="lesson-title">一、HTML是什么？</h1>
+            <p class="lesson-subtitle">网页的数据组织 - 探索网页的构造语言</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p>进度: <span id="progress-text">0%</span></p>
+        </div>
+
+        <!-- 引入主题环节 -->
+        <div class="content-section" id="intro-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-lightbulb"></i>
+                引入主题，明确任务
+            </h2>
+            
+            <div class="intro-section">
+                <div class="intro-title">🌐 探索网页的秘密</div>
+                <div class="intro-description">
+                    同学们，我们平时浏览的各类官网，页面上标题、图片、文字是怎么组织起来的呢？都离不开一种核心技术支撑——HTML语言！
+                </div>
+                
+                <div class="demo-instruction">
+                    <h4>🔍 动手实践：探索网页代码</h4>
+                    <ol class="instruction-steps">
+                        <li>打开浏览器，访问电子科技博物馆官网</li>
+                        <li>按下 F12 调出开发者工具</li>
+                        <li>对比左侧网页效果和右侧代码区域</li>
+                        <li>找找看：控制浏览器标题栏的是哪个标签？</li>
+                    </ol>
+                </div>
+
+                <div class="browser-demo">
+<span style="color: #ff6b6b;">&lt;html&gt;</span>
+  <span style="color: #4ecdc4;">&lt;head&gt;</span>
+    <span style="color: #feca57;">&lt;title&gt;</span>电子科技博物馆<span style="color: #feca57;">&lt;/title&gt;</span>
+  <span style="color: #4ecdc4;">&lt;/head&gt;</span>
+  <span style="color: #4ecdc4;">&lt;body&gt;</span>
+    <span style="color: #feca57;">&lt;h1&gt;</span>欢迎来到电子科技博物馆<span style="color: #feca57;">&lt;/h1&gt;</span>
+    <span style="color: #feca57;">&lt;img src="museum.jpg"&gt;</span>
+  <span style="color: #4ecdc4;">&lt;/body&gt;</span>
+<span style="color: #ff6b6b;">&lt;/html&gt;</span>
+                </div>
+
+                <div style="background: white; border-radius: 15px; padding: 20px; margin-top: 20px;">
+                    <h4>💡 核心发现：</h4>
+                    <p style="color: #666; line-height: 1.6; margin-bottom: 15px;">
+                        通过开发者工具，我们发现了网页的核心秘密——HTML语言就像网页的<strong>"骨架"</strong>：
+                    </p>
+                    <ul style="color: #555; padding-left: 20px;">
+                        <li><strong>&lt;html&gt;</strong>是整个网页的根标签</li>
+                        <li><strong>&lt;head&gt;</strong>里存放网页标题等"隐藏信息"</li>
+                        <li><strong>&lt;body&gt;</strong>里是我们看到的"可见内容"</li>
+                        <li>标签就像"骨架上的零件"，决定了信息的呈现形式</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 分层实践任务 -->
+        <div class="content-section" id="practice-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-tasks"></i>
+                分层实践，深化应用
+            </h2>
+            
+            <div class="task-section">
+                <div class="task-title">🎯 人工智能主题网页制作任务</div>
+                <p style="text-align: center; color: #666; margin-bottom: 25px;">
+                    以3-4人小组为单位，合作完成人工智能主题网页制作，分三个层次推进：
+                </p>
+
+                <div class="task-levels">
+                    <!-- 基础任务 -->
+                    <div class="task-level basic">
+                        <div class="level-title">
+                            <i class="level-icon fas fa-seedling"></i>
+                            基础任务 (10分钟)
+                        </div>
+                        <ul class="level-requirements">
+                            <li>搭建HTML基本结构，确保标签完整闭合</li>
+                            <li>在&lt;head&gt;中添加&lt;title&gt;标签，设置网页标题</li>
+                            <li>在&lt;body&gt;中用&lt;h1&gt;标签添加页面大标题</li>
+                            <li>用&lt;p&gt;标签插入2段AI相关文字</li>
+                        </ul>
+                        <button class="task-btn" onclick="startBasicTask()">开始基础任务</button>
+                    </div>
+
+                    <!-- 提升任务 -->
+                    <div class="task-level intermediate">
+                        <div class="level-title">
+                            <i class="level-icon fas fa-rocket"></i>
+                            提升任务 (12分钟)
+                        </div>
+                        <ul class="level-requirements">
+                            <li>插入1张AI主题图片，使用&lt;img&gt;标签</li>
+                            <li>正确设置src属性指向图片路径</li>
+                            <li>用&lt;center&gt;标签让标题和图片居中对齐</li>
+                            <li>尝试用bgcolor设置网页背景色</li>
+                        </ul>
+                        <button class="task-btn" onclick="startIntermediateTask()">开始提升任务</button>
+                    </div>
+
+                    <!-- 拓展任务 -->
+                    <div class="task-level advanced">
+                        <div class="level-title">
+                            <i class="level-icon fas fa-crown"></i>
+                            拓展任务 (8分钟)
+                        </div>
+                        <ul class="level-requirements">
+                            <li>添加2个超链接，分别指向不同网站</li>
+                            <li>使用&lt;a&gt;标签，正确设置href属性</li>
+                            <li>保存文件为'index.html'，用浏览器打开预览</li>
+                            <li>排查并解决图片显示、链接跳转等问题</li>
+                        </ul>
+                        <button class="task-btn" onclick="startAdvancedTask()">开始拓展任务</button>
+                    </div>
+                </div>
+
+                <!-- 代码编辑器 -->
+                <div class="code-editor" id="code-editor" style="display: none;">
+                    <div class="editor-header">
+                        <div class="editor-dots">
+                            <div class="editor-dot dot-red"></div>
+                            <div class="editor-dot dot-yellow"></div>
+                            <div class="editor-dot dot-green"></div>
+                        </div>
+                        <div class="editor-title">index.html - 人工智能主题网页</div>
+                    </div>
+                    <textarea class="code-textarea" id="code-input" placeholder="在这里编写你的HTML代码..."></textarea>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button class="task-btn" onclick="runCode()" style="max-width: 200px;">
+                            <i class="fas fa-play"></i> 运行代码
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 预览区域 -->
+                <div id="preview-area" style="display: none; background: white; border-radius: 15px; padding: 20px; margin-top: 20px; min-height: 300px; border: 2px dashed #ccc;">
+                    <div style="text-align: center; color: #666; margin-bottom: 15px;">
+                        <i class="fas fa-eye" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <div>网页预览区域</div>
+                    </div>
+                    <div id="preview-content" style="padding: 20px;">
+                        你的网页将在这里显示...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速评价环节 -->
+        <div class="content-section" id="assessment-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-clipboard-check"></i>
+                成果总结，快捷评价
+            </h2>
+            
+            <div class="quick-assessment">
+                <div class="assessment-title">📝 知识检测</div>
+                <p style="color: #666; margin-bottom: 25px;">
+                    通过以下题目快速检测核心知识掌握情况：
+                </p>
+
+                <div class="quiz-container">
+                    <div class="quiz-item">
+                        <div class="quiz-question">1. 定义网页标题的标签是？</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">A. &lt;body&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, true)">B. &lt;title&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">C. &lt;h1&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">D. &lt;p&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <div class="quiz-question">2. 插入图片时，用于指定图片路径的属性是？</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">A. href</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, true)">B. src</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">C. alt</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">D. title</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <div class="quiz-question">3. HTML标签通常需要？</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">A. 单个出现</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, true)">B. 成对出现</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">C. 三个一组</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">D. 随机出现</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <div class="quiz-question">4. 网页中能看到的内容应该放在？</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">A. &lt;head&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, true)">B. &lt;body&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">C. &lt;title&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">D. &lt;html&gt;</div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-item">
+                        <div class="quiz-question">5. 超链接的HTML标签是？</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">A. &lt;link&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, true)">B. &lt;a&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">C. &lt;href&gt;</div>
+                            <div class="quiz-option" onclick="selectAnswer(this, false)">D. &lt;url&gt;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <button class="submit-quiz-btn" onclick="submitQuiz()">
+                        <i class="fas fa-check"></i> 提交答案
+                    </button>
+                </div>
+
+                <div id="quiz-result" style="display: none; margin-top: 20px; padding: 20px; background: white; border-radius: 15px;">
+                    <!-- 测验结果将在这里显示 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航按钮 -->
+        <div class="navigation">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </button>
+            <button class="next-btn" id="next-btn" onclick="goToNext()" disabled>
+                下一课：HTML标签大冒险 <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        let quizAnswers = {};
+        let correctAnswers = 0;
+        let totalQuestions = 5;
+
+        // 页面加载时显示第一个部分
+        window.addEventListener('load', () => {
+            showSection(1);
+        });
+
+        // 显示指定部分
+        function showSection(section) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach((sec, index) => {
+                if (index < section) {
+                    sec.classList.add('visible');
+                } else {
+                    sec.classList.remove('visible');
+                }
+            });
+            
+            currentSection = section;
+            updateProgress();
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const progress = (currentSection / 3) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+        }
+
+        // 开始基础任务
+        function startBasicTask() {
+            document.getElementById('code-editor').style.display = 'block';
+            document.getElementById('code-input').value = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人工智能主题网页</title>
+</head>
+<body>
+    <h1>走进人工智能</h1>
+    <p>人工智能是计算机科学的一个分支，它企图了解智能的实质，并生产出一种新的能以人类智能相似的方式做出反应的智能机器。</p>
+    <p>人工智能的研究领域包括机器人、语言识别、图像识别、自然语言处理和专家系统等。</p>
+</body>
+</html>`;
+            showMessage('基础任务已加载！请完善代码并运行查看效果。', 'success');
+        }
+
+        // 开始提升任务
+        function startIntermediateTask() {
+            document.getElementById('code-editor').style.display = 'block';
+            document.getElementById('code-input').value = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人工智能主题网页</title>
+</head>
+<body bgcolor="lightblue">
+    <center>
+        <h1>走进人工智能</h1>
+        <img src="https://via.placeholder.com/400x200?text=AI+Image" alt="AI主题图片">
+    </center>
+    <p>人工智能是计算机科学的一个分支，它企图了解智能的实质，并生产出一种新的能以人类智能相似的方式做出反应的智能机器。</p>
+    <p>人工智能的研究领域包括机器人、语言识别、图像识别、自然语言处理和专家系统等。</p>
+</body>
+</html>`;
+            showMessage('提升任务已加载！尝试添加图片和样式。', 'success');
+        }
+
+        // 开始拓展任务
+        function startAdvancedTask() {
+            document.getElementById('code-editor').style.display = 'block';
+            document.getElementById('code-input').value = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>人工智能主题网页</title>
+</head>
+<body bgcolor="lightblue">
+    <center>
+        <h1>走进人工智能</h1>
+        <img src="https://via.placeholder.com/400x200?text=AI+Image" alt="AI主题图片">
+    </center>
+    <p>人工智能是计算机科学的一个分支，它企图了解智能的实质，并生产出一种新的能以人类智能相似的方式做出反应的智能机器。</p>
+    <p>人工智能的研究领域包括机器人、语言识别、图像识别、自然语言处理和专家系统等。</p>
+    <p>相关链接：</p>
+    <a href="https://www.example.com" target="_blank">访问示例网站</a> | 
+    <a href="https://www.museum.uestc.edu.cn" target="_blank">电子科技博物馆</a>
+</body>
+</html>`;
+            showMessage('拓展任务已加载！添加超链接并测试效果。', 'success');
+        }
+
+        // 运行代码
+        function runCode() {
+            const code = document.getElementById('code-input').value;
+            const previewArea = document.getElementById('preview-area');
+            const previewContent = document.getElementById('preview-content');
+            
+            previewArea.style.display = 'block';
+            
+            try {
+                // 提取body内容
+                const bodyMatch = code.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+                if (bodyMatch) {
+                    let bodyContent = bodyMatch[1];
+                    // 简单的HTML渲染
+                    bodyContent = bodyContent
+                        .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '<div style="font-size: 2rem; font-weight: bold; margin: 20px 0; color: #333;">$1</div>')
+                        .replace(/<p[^>]*>(.*?)<\/p>/gi, '<div style="margin: 15px 0; line-height: 1.6; color: #666;">$1</div>')
+                        .replace(/<img[^>]*src="([^"]*)"[^>]*alt="([^"]*)"[^>]*>/gi, '<img src="$1" alt="$2" style="max-width: 100%; height: auto; margin: 15px 0; border-radius: 10px;">')
+                        .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '<a href="$1" target="_blank" style="color: #667eea; text-decoration: underline; margin: 0 5px;">$2</a>')
+                        .replace(/<center[^>]*>([\s\S]*?)<\/center>/gi, '<div style="text-align: center;">$1</div>');
+                    
+                    previewContent.innerHTML = bodyContent;
+                    showMessage('代码运行成功！查看预览效果。', 'success');
+                } else {
+                    previewContent.innerHTML = '<div style="color: #f44336; text-align: center; padding: 50px;">请确保包含完整的HTML结构（包括&lt;html&gt;和&lt;body&gt;标签）</div>';
+                }
+            } catch (error) {
+                previewContent.innerHTML = '<div style="color: #f44336; text-align: center; padding: 50px;">代码运行出错，请检查HTML语法。</div>';
+                showMessage('代码运行出错，请检查语法。', 'error');
+            }
+        }
+
+        // 选择测验答案
+        function selectAnswer(element, isCorrect) {
+            const quizItem = element.closest('.quiz-item');
+            const options = quizItem.querySelectorAll('.quiz-option');
+            
+            options.forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            
+            const questionIndex = Array.from(document.querySelectorAll('.quiz-item')).indexOf(quizItem);
+            quizAnswers[questionIndex] = isCorrect;
+        }
+
+        // 提交测验
+        function submitQuiz() {
+            correctAnswers = Object.values(quizAnswers).filter(Boolean).length;
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            let resultHTML = `<h3 style="color: #667eea; margin-bottom: 15px;">测验结果</h3>`;
+            resultHTML += `<div style="font-size: 2rem; color: #4caf50; margin-bottom: 10px;">${score}分</div>`;
+            resultHTML += `<div style="color: #666; margin-bottom: 20px;">答对 ${correctAnswers}/${totalQuestions} 题</div>`;
+            
+            if (score >= 80) {
+                resultHTML += `<div style="color: #4caf50; font-weight: 600;">🎉 优秀！你已经掌握了HTML基础知识！</div>`;
+                document.getElementById('next-btn').disabled = false;
+            } else if (score >= 60) {
+                resultHTML += `<div style="color: #ff9800; font-weight: 600;">👍 良好！继续加油，你可以做得更好！</div>`;
+                document.getElementById('next-btn').disabled = false;
+            } else {
+                resultHTML += `<div style="color: #f44336; font-weight: 600;">💪 继续努力！建议复习后再试一次！</div>`;
+            }
+            
+            document.getElementById('quiz-result').innerHTML = resultHTML;
+            document.getElementById('quiz-result').style.display = 'block';
+            
+            // 标记课程完成
+            if (score >= 60) {
+                localStorage.setItem('lesson1Completed', 'true');
+                showMessage('🎉 恭喜完成第一课！准备好进入下一课了吗？', 'success');
+            }
+        }
+
+        // 返回首页
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // 进入下一课
+        function goToNext() {
+            window.location.href = 'lesson2.html';
+        }
+
+        // 显示消息
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#f44336'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-size: 14px;
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // 滚动监听，逐步显示内容
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach((section, index) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.8) {
+                    section.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

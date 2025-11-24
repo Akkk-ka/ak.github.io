@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四课：超链接的魔法 - HTML冒险之旅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .lesson-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lesson-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .lesson-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .lesson-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        /* 超链接演示 */
+        .link-demo {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .demo-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .demo-link {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .demo-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* 链接创建器 */
+        .link-creator {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .creator-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .creator-form {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .creator-result {
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 100px;
+        }
+
+        .create-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 链接类型展示 */
+        .link-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .link-type-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .link-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .link-type-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .link-type-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .link-type-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .link-example {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #2d3748;
+        }
+
+        /* 交互式链接游戏 */
+        .link-game {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .link-builder {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .builder-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .section-title-small {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .link-parts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .link-part {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .link-part:hover {
+            transform: scale(1.05);
+        }
+
+        .link-part.selected {
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+        }
+
+        .link-preview {
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .link-preview.complete {
+            border-color: #4caf50;
+            background: #e8f5e8;
+            color: #2d3748;
+        }
+
+        .quiz-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e8;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .lesson-title {
+                font-size: 2rem;
+            }
+            
+            .link-builder {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lesson-container">
+        <!-- 课程头部 -->
+        <div class="lesson-header">
+            <h1 class="lesson-title">第四课：超链接的魔法</h1>
+            <p class="lesson-subtitle">探索网页间的连接艺术</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <p>进度: <span id="progress-text">0%</span></p>
+        </div>
+
+        <!-- 超链接介绍 -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-link"></i>
+                什么是超链接？
+            </h2>
+            
+            <div class="link-demo">
+                <h3>🔗 超链接就像网页间的桥梁</h3>
+                <p>想象一下，互联网就像一座巨大的城市，每个网页都是一座建筑，超链接就是连接这些建筑的道路！</p>
+                
+                <div class="demo-links">
+                    <a href="#" class="demo-link" onclick="showDemo('text')">
+                        <i class="fas fa-font"></i> 文本链接
+                    </a>
+                    <a href="#" class="demo-link" onclick="showDemo('image')">
+                        <i class="fas fa-image"></i> 图片链接
+                    </a>
+                    <a href="#" class="demo-link" onclick="showDemo('button')">
+                        <i class="fas fa-mouse-pointer"></i> 按钮链接
+                    </a>
+                </div>
+                
+                <p id="demo-description" style="margin-top: 20px; color: #666;">
+                    点击上面的链接，看看不同类型的超链接效果！
+                </p>
+            </div>
+        </div>
+
+        <!-- 链接创建器 -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-magic"></i>
+                创建你的第一个链接
+            </h2>
+            
+            <div class="link-creator">
+                <div class="creator-title">🎯 超链接制作工坊</div>
+                
+                <div class="creator-form">
+                    <div class="form-group">
+                        <label class="form-label">链接文字：</label>
+                        <input type="text" class="form-input" id="link-text" placeholder="输入要显示的文字" value="点击访问示例网站">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">链接地址：</label>
+                        <input type="text" class="form-input" id="link-url" placeholder="输入网址" value="https://www.example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">链接颜色：</label>
+                        <select class="form-input" id="link-color">
+                            <option value="#667eea">蓝色</option>
+                            <option value="#ff6b6b">红色</option>
+                            <option value="#4ecdc4">青色</option>
+                            <option value="#45b7d1">天蓝色</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="create-btn" onclick="createLink()">
+                    <i class="fas fa-magic"></i> 生成链接
+                </button>
+
+                <div class="creator-result" id="creator-result">
+                    填写上面的表单，然后点击"生成链接"来创建你的超链接...
+                </div>
+            </div>
+        </div>
+
+        <!-- 链接类型展示 -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-network-wired"></i>
+                超链接的不同类型
+            </h2>
+            
+            <div class="link-types">
+                <div class="link-type-card">
+                    <div class="link-type-icon"><i class="fas fa-external-link-alt"></i></div>
+                    <div class="link-type-title">外部链接</div>
+                    <div class="link-type-description">
+                        链接到其他网站的页面，比如从百度跳到淘宝
+                    </div>
+                    <div class="link-example">
+                        &lt;a href="https://www.taobao.com"&gt;访问淘宝&lt;/a&gt;
+                    </div>
+                </div>
+
+                <div class="link-type-card">
+                    <div class="link-type-icon"><i class="fas fa-file"></i></div>
+                    <div class="link-type-title">内部链接</div>
+                    <div class="link-type-description">
+                        链接到自己网站的其他页面，比如从首页跳到关于页面
+                    </div>
+                    <div class="link-example">
+                        &lt;a href="about.html"&gt;关于我们&lt;/a&gt;
+                    </div>
+                </div>
+
+                <div class="link-type-card">
+                    <div class="link-type-icon"><i class="fas fa-hashtag"></i></div>
+                    <div class="link-type-title">锚点链接</div>
+                    <div class="link-type-description">
+                        链接到同一页面的不同位置，比如回到顶部
+                    </div>
+                    <div class="link-example">
+                        &lt;a href="#top"&gt;回到顶部&lt;/a&gt;
+                    </div>
+                </div>
+
+                <div class="link-type-card">
+                    <div class="link-type-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="link-type-title">邮件链接</div>
+                    <div class="link-type-description">
+                        点击后打开邮件客户端，发送邮件
+                    </div>
+                    <div class="link-example">
+                        &lt;a href="mailto:someone@example.com"&gt;发送邮件&lt;/a&gt;
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 交互式链接游戏 -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-gamepad"></i>
+                超链接拼图游戏
+            </h2>
+            
+            <div class="link-game">
+                <div class="game-title">🔗 超链接拼图挑战</div>
+                <div class="game-description">
+                    点击下面的链接部件，按照正确的顺序构建一个完整的超链接！
+                </div>
+
+                <div class="link-builder">
+                    <div class="builder-section">
+                        <div class="section-title-small">链接部件</div>
+                        <div class="link-parts">
+                            <div class="link-part" onclick="selectPart(this, 'start-tag')">&lt;a href=""&gt;</div>
+                            <div class="link-part" onclick="selectPart(this, 'content')">链接文字</div>
+                            <div class="link-part" onclick="selectPart(this, 'end-tag')">&lt;/a&gt;</div>
+                            <div class="link-part" onclick="selectPart(this, 'url')">"https://example.com"</div>
+                        </div>
+                    </div>
+
+                    <div class="builder-section">
+                        <div class="section-title-small">你的链接</div>
+                        <div class="link-preview" id="link-preview">
+                            点击左边的部件来构建链接...
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="create-btn" onclick="resetGame()">
+                        <i class="fas fa-redo"></i> 重新开始
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 知识测验 -->
+        <div class="content-section">
+            <h2 class="section-title">
+                <i class="section-icon fas fa-question-circle"></i>
+                超链接知识测验
+            </h2>
+            
+            <div class="quiz-container">
+                <div class="quiz-question">1. 超链接的HTML标签是什么？</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">&lt;link&gt;</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">&lt;a&gt;</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">&lt;href&gt;</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">2. 链接地址应该放在哪个属性中？</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">src</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">href</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">url</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">3. 以下哪个是正确的超链接格式？</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">&lt;a&gt;https://example.com&lt;/a&gt;</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">&lt;a href="https://example.com"&gt;链接&lt;/a&gt;</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">&lt;link src="https://example.com"&gt;</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 导航按钮 -->
+        <div class="navigation">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 上一课
+            </button>
+            <button class="next-btn" id="next-btn" onclick="goToNext()" disabled>
+                下一课：实战演练 <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let selectedParts = [];
+        let correctAnswers = 0;
+        const totalQuestions = 3;
+
+        // 显示演示
+        function showDemo(type) {
+            const descriptions = {
+                'text': '文本链接是最常见的链接类型，用户可以点击文字跳转到其他页面。',
+                'image': '图片链接让用户可以点击图片来跳转，常用于广告或产品展示。',
+                'button': '按钮链接让网页更加美观，用户更愿意点击。'
+            };
+            
+            document.getElementById('demo-description').textContent = descriptions[type];
+            showMessage('太棒了！这就是' + (type === 'text' ? '文本' : type === 'image' ? '图片' : '按钮') + '链接的效果！', 'success');
+        }
+
+        // 创建链接
+        function createLink() {
+            const text = document.getElementById('link-text').value || '链接文字';
+            const url = document.getElementById('link-url').value || '#';
+            const color = document.getElementById('link-color').value;
+            
+            const htmlCode = `<span style="color: #ff6b6b;">&lt;a href="</span><span style="color: #4ecdc4;">${url}</span><span style="color: #ff6b6b;">"&gt;</span><span style="color: #feca57;">${text}</span><span style="color: #ff6b6b;">&lt;/a&gt;</span>`;
+            
+            const demoLink = `<a href="${url}" style="color: ${color}; text-decoration: none; font-weight: 600;" target="_blank">${text}</a>`;
+            
+            document.getElementById('creator-result').innerHTML = 
+                `HTML代码：<br>${htmlCode}<br><br>效果：<br>${demoLink}`;
+            
+            showMessage('链接创建成功！点击效果可以访问链接！', 'success');
+        }
+
+        // 选择链接部件
+        function selectPart(element, partType) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedParts = selectedParts.filter(part => part !== partType);
+            } else {
+                element.classList.add('selected');
+                selectedParts.push(partType);
+            }
+            
+            updateLinkPreview();
+        }
+
+        // 更新链接预览
+        function updateLinkPreview() {
+            const preview = document.getElementById('link-preview');
+            
+            if (selectedParts.length === 0) {
+                preview.textContent = '点击左边的部件来构建链接...';
+                preview.classList.remove('complete');
+                return;
+            }
+
+            // 正确的顺序
+            const correctOrder = ['start-tag', 'url', 'content', 'end-tag'];
+            const currentOrder = [...selectedParts];
+            
+            let htmlCode = '';
+            let isCorrect = true;
+            
+            // 检查是否按正确顺序选择
+            if (currentOrder.length === 4) {
+                for (let i = 0; i < 4; i++) {
+                    if (currentOrder[i] !== correctOrder[i]) {
+                        isCorrect = false;
+                        break;
+                    }
+                }
+            } else {
+                isCorrect = false;
+            }
+            
+            // 构建HTML代码
+            if (selectedParts.includes('start-tag')) {
+                htmlCode += '<span style="color: #ff6b6b;">&lt;a href=</span>';
+            }
+            if (selectedParts.includes('url')) {
+                htmlCode += '<span style="color: #4ecdc4;">"https://example.com"</span>';
+            }
+            if (selectedParts.includes('start-tag') && selectedParts.includes('url')) {
+                htmlCode += '<span style="color: #ff6b6b;">&gt;</span>';
+            }
+            if (selectedParts.includes('content')) {
+                htmlCode += '<span style="color: #feca57;">链接文字</span>';
+            }
+            if (selectedParts.includes('end-tag')) {
+                htmlCode += '<span style="color: #ff6b6b;">&lt;/a&gt;</span>';
+            }
+            
+            preview.innerHTML = htmlCode || '选择更多部件...';
+            
+            if (isCorrect) {
+                preview.classList.add('complete');
+                showMessage('🎉 完美！你成功构建了一个完整的超链接！', 'success');
+                setTimeout(() => {
+                    if (correctAnswers >= totalQuestions) {
+                        document.getElementById('next-btn').disabled = false;
+                    }
+                }, 1000);
+            } else {
+                preview.classList.remove('complete');
+            }
+        }
+
+        // 重置游戏
+        function resetGame() {
+            selectedParts = [];
+            document.querySelectorAll('.link-part').forEach(part => {
+                part.classList.remove('selected');
+            });
+            updateLinkPreview();
+            showMessage('游戏已重置！', 'info');
+        }
+
+        // 检查答案
+        function checkAnswer(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                correctAnswers++;
+                showMessage('回答正确！', 'success');
+            } else {
+                element.classList.add('incorrect');
+                showMessage('再试试看！', 'warning');
+                setTimeout(() => {
+                    options.forEach(option => {
+                        if (option.onclick.toString().includes('true')) {
+                            option.classList.add('correct');
+                        }
+                    });
+                }, 1000);
+            }
+            
+            if (correctAnswers >= totalQuestions) {
+                setTimeout(() => {
+                    showCompletionMessage();
+                }, 2000);
+            }
+        }
+
+        // 显示完成消息
+        function showCompletionMessage() {
+            showMessage('🎉 恭喜你掌握了超链接的魔法！准备好进行实战演练了吗？', 'success');
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        // 返回上一课
+        function goBack() {
+            window.location.href = 'lesson3.html';
+        }
+
+        // 进入下一课
+        function goToNext() {
+            localStorage.setItem('lesson4Completed', 'true');
+            window.location.href = 'lesson5.html';
+        }
+
+        // 显示消息
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#2196f3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-size: 14px;
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // 页面加载时更新进度
+        window.addEventListener('load', () => {
+            updateProgress();
+        });
+
+        function updateProgress() {
+            const progress = 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = progress + '%';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识大考验 - HTML冒险之旅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.3/plotly.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .assessment-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .assessment-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .assessment-title {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .assessment-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .test-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* 测验模式选择 */
+        .test-modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .mode-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mode-description {
+            color: #666;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-features {
+            list-style: none;
+        }
+
+        .mode-features li {
+            color: #555;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .mode-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        /* 测验界面 */
+        .quiz-interface {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .quiz-progress {
+            flex: 1;
+            margin-right: 30px;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .quiz-timer {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .question-container {
+            margin-bottom: 40px;
+        }
+
+        .question-number {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .answer-options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(10px);
+        }
+
+        .answer-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .answer-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e8;
+            color: #2d3436;
+        }
+
+        .answer-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #2d3436;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-right: 15px;
+            color: #667eea;
+        }
+
+        .answer-option.selected .option-label {
+            color: white;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .control-btn.secondary {
+            background: #6c757d;
+        }
+
+        .control-btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        /* 结果界面 */
+        .results-interface {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            display: none;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .result-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .score-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .performance-chart {
+            margin: 30px 0;
+            height: 300px;
+        }
+
+        .result-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .result-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .result-btn.secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+        }
+
+        /* 学习报告 */
+        .learning-report {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .report-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .report-section {
+            margin-bottom: 30px;
+        }
+
+        .report-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: #667eea;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .skill-level {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .skill-level.master {
+            background: #4caf50;
+            color: white;
+        }
+
+        .skill-level.intermediate {
+            background: #ff9800;
+            color: white;
+        }
+
+        .skill-level.beginner {
+            background: #2196f3;
+            color: white;
+        }
+
+        .recommendation-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .assessment-title {
+                font-size: 2rem;
+            }
+            
+            .test-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .quiz-progress {
+                margin-right: 0;
+            }
+            
+            .result-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <!-- 头部区域 -->
+        <div class="assessment-header">
+            <h1 class="assessment-title">知识大考验</h1>
+            <p class="assessment-subtitle">测试你的HTML学习成果，获得专属成就徽章！</p>
+            
+            <div class="test-stats">
+                <div class="stat-item">
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">题目总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">时间限制(分钟)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">80</div>
+                    <div class="stat-label">及格分数</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测验模式选择 -->
+        <div class="test-modes" id="test-modes">
+            <div class="mode-card" onclick="startTest('basic')">
+                <div class="mode-icon"><i class="fas fa-seedling"></i></div>
+                <div class="mode-title">基础挑战</div>
+                <div class="mode-description">
+                    测试HTML基础概念和标签知识，适合初学者巩固基础。
+                </div>
+                <ul class="mode-features">
+                    <li>10道基础题目</li>
+                    <li>10分钟答题时间</li>
+                    <li>涵盖HTML基础概念</li>
+                    <li>简单标签识别</li>
+                </ul>
+            </div>
+
+            <div class="mode-card" onclick="startTest('intermediate')">
+                <div class="mode-icon"><i class="fas fa-brain"></i></div>
+                <div class="mode-title">进阶挑战</div>
+                <div class="mode-description">
+                    测试HTML结构和超链接应用，检验综合运用能力。
+                </div>
+                <ul class="mode-features">
+                    <li>15道进阶题目</li>
+                    <li>12分钟答题时间</li>
+                    <li>HTML结构理解</li>
+                    <li>超链接应用</li>
+                </ul>
+            </div>
+
+            <div class="mode-card" onclick="startTest('advanced')">
+                <div class="mode-icon"><i class="fas fa-crown"></i></div>
+                <div class="mode-title">终极挑战</div>
+                <div class="mode-description">
+                    全面测试HTML知识，挑战成为真正的HTML大师！
+                </div>
+                <ul class="mode-features">
+                    <li>20道综合题目</li>
+                    <li>15分钟答题时间</li>
+                    <li>全面知识覆盖</li>
+                    <li>实战应用题目</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 测验界面 -->
+        <div class="quiz-interface" id="quiz-interface">
+            <div class="quiz-header">
+                <div class="quiz-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="quiz-progress-bar"></div>
+                    </div>
+                    <div class="progress-text" id="quiz-progress-text">题目 1 / 20</div>
+                </div>
+                <div class="quiz-timer" id="quiz-timer">15:00</div>
+            </div>
+
+            <div class="question-container" id="question-container">
+                <div class="question-number" id="question-number">第 1 题</div>
+                <div class="question-text" id="question-text">
+                    加载中...
+                </div>
+                <div class="answer-options" id="answer-options">
+                    <!-- 答案选项将在这里动态生成 -->
+                </div>
+            </div>
+
+            <div class="quiz-controls">
+                <button class="control-btn secondary" id="prev-btn" onclick="previousQuestion()" disabled>
+                    <i class="fas fa-arrow-left"></i> 上一题
+                </button>
+                <button class="control-btn" id="next-btn" onclick="nextQuestion()" disabled>
+                    下一题 <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 结果界面 -->
+        <div class="results-interface" id="results-interface">
+            <div class="result-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="result-title">测试完成！</div>
+            <div class="result-subtitle">你成功完成了HTML知识大考验</div>
+
+            <div class="score-display">
+                <div class="final-score" id="final-score">85</div>
+                <div class="score-label">总分 / 100</div>
+            </div>
+
+            <div class="performance-chart" id="performance-chart">
+                <!-- 成绩分析图表 -->
+            </div>
+
+            <div class="result-buttons">
+                <button class="result-btn" onclick="viewReport()">
+                    <i class="fas fa-chart-line"></i> 查看学习报告
+                </button>
+                <button class="result-btn secondary" onclick="retakeTest()">
+                    <i class="fas fa-redo"></i> 重新测试
+                </button>
+                <button class="result-btn" onclick="goToHome()">
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
+            </div>
+        </div>
+
+        <!-- 学习报告 -->
+        <div class="learning-report" id="learning-report">
+            <div class="report-title">📊 个人学习报告</div>
+            
+            <div class="report-section">
+                <div class="report-section-title">
+                    <i class="fas fa-chart-pie section-icon"></i>
+                    技能掌握情况
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">HTML基础概念</span>
+                    <span class="skill-level master">大师级</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">HTML标签使用</span>
+                    <span class="skill-level master">大师级</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">网页结构设计</span>
+                    <span class="skill-level intermediate">熟练级</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">超链接应用</span>
+                    <span class="skill-level intermediate">熟练级</span>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <div class="report-section-title">
+                    <i class="fas fa-lightbulb section-icon"></i>
+                    学习建议
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-title">继续深入学习</div>
+                    <div class="recommendation-text">
+                        建议学习CSS样式和JavaScript交互，让你的网页更加美观和动态。
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-title">实践项目</div>
+                    <div class="recommendation-text">
+                        尝试创建更复杂的网页项目，如个人博客、作品展示网站等。
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="recommendation-title">加入社区</div>
+                    <div class="recommendation-text">
+                        参与编程社区，与其他开发者交流学习，获取更多资源和帮助。
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <div class="report-section-title">
+                    <i class="fas fa-medal section-icon"></i>
+                    获得成就
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; color: #4caf50; margin-bottom: 15px;">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div style="font-size: 1.5rem; color: #333; font-weight: 600;">
+                        HTML小能手认证
+                    </div>
+                    <div style="color: #666; margin-top: 10px;">
+                        恭喜你成功完成HTML基础课程学习！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测验数据
+        const testData = {
+            basic: {
+                timeLimit: 600, // 10分钟
+                questions: [
+                    {
+                        question: "HTML的中文全称是什么？",
+                        options: ["超链接传输语言", "超文本标记语言", "高级文本制作语言", "网页设计语言"],
+                        correct: 1,
+                        explanation: "HTML是HyperText Markup Language的缩写，中文意思是超文本标记语言。"
+                    },
+                    {
+                        question: "HTML标签通常用什么符号包围？",
+                        options: ["圆括号 ()", "大括号 {}", "尖括号 <>", "方括号 []"],
+                        correct: 2,
+                        explanation: "HTML标签使用尖括号<>来包围，比如<html>、<body>等。"
+                    },
+                    {
+                        question: "哪个标签用来定义网页的标题？",
+                        options: ["<title>", "<heading>", "<h1>", "<header>"],
+                        correct: 0,
+                        explanation: "<title>标签定义网页标题，显示在浏览器标签页上。"
+                    },
+                    {
+                        question: "HTML标签通常是成对出现的吗？",
+                        options: ["是的，都有开始和结束标签", "不是，都是单个标签", "有些成对，有些单个", "只有图片标签成对"],
+                        correct: 2,
+                        explanation: "大多数HTML标签成对出现，如<p></p>，但有些是单个的，如<img>。"
+                    },
+                    {
+                        question: "哪个标签用来显示最大的标题？",
+                        options: ["<h6>", "<h1>", "<title>", "<head>"],
+                        correct: 1,
+                        explanation: "<h1>标签显示最大的标题，数字越小，标题越大。"
+                    },
+                    {
+                        question: "<p>标签的作用是什么？",
+                        options: ["显示图片", "创建链接", "显示段落", "设置标题"],
+                        correct: 2,
+                        explanation: "<p>标签用于定义段落，是最常用的文本标签之一。"
+                    },
+                    {
+                        question: "哪个标签用来插入图片？",
+                        options: ["<image>", "<img>", "<picture>", "<photo>"],
+                        correct: 1,
+                        explanation: "<img>标签用于在网页中插入图片，是单个标签。"
+                    },
+                    {
+                        question: "HTML文档的基本结构包括哪些部分？",
+                        options: ["只有<body>", "<head>和<body>", "<title>和<p>", "<html>和<head>"],
+                        correct: 1,
+                        explanation: "HTML文档基本结构包括<head>（头部）和<body>（主体）两部分。"
+                    },
+                    {
+                        question: "哪个属性用来设置图片的路径？",
+                        options: ["href", "src", "path", "url"],
+                        correct: 1,
+                        explanation: "src属性用于指定图片的路径，如<img src='图片地址'>。"
+                    },
+                    {
+                        question: "浏览器如何知道一个文档是HTML格式？",
+                        options: ["通过文件扩展名", "通过<!DOCTYPE html>声明", "通过<html>标签", "通过文件大小"],
+                        correct: 1,
+                        explanation: "<!DOCTYPE html>声明告诉浏览器这是一个HTML5文档。"
+                    }
+                ]
+            },
+            intermediate: {
+                timeLimit: 720, // 12分钟
+                questions: [
+                    {
+                        question: "超链接的HTML标签是什么？",
+                        options: ["<link>", "<a>", "<href>", "<url>"],
+                        correct: 1,
+                        explanation: "<a>标签用于创建超链接，是最常用的交互元素之一。"
+                    },
+                    {
+                        question: "链接地址应该放在哪个属性中？",
+                        options: ["src", "href", "url", "link"],
+                        correct: 1,
+                        explanation: "href属性用于指定链接的目标地址，如<a href='网址'>。"
+                    },
+                    {
+                        question: "<head>部分通常包含什么内容？",
+                        options: ["网页正文", "可见内容", "元信息和标题", "图片和链接"],
+                        correct: 2,
+                        explanation: "<head>部分包含元信息、标题、样式等不可见内容。"
+                    },
+                    {
+                        question: "哪个标签用来创建无序列表？",
+                        options: ["<list>", "<ul>", "<ol>", "<li>"],
+                        correct: 1,
+                        explanation: "<ul>标签创建无序列表，列表项用<li>标签定义。"
+                    },
+                    {
+                        question: "HTML中的注释怎么写？",
+                        options: ["// 注释", "/* 注释 */", "<!-- 注释 -->", "# 注释"],
+                        correct: 2,
+                        explanation: "HTML注释使用<!-- 注释内容 -->格式。"
+                    },
+                    {
+                        question: "哪个属性可以让链接在新窗口打开？",
+                        options: ["target='_blank'", "window='new'", "open='new'", "href='_blank'"],
+                        correct: 0,
+                        explanation: "target='_blank'属性让链接在新窗口或标签页打开。"
+                    },
+                    {
+                        question: "<body>标签的作用是什么？",
+                        options: ["定义网页标题", "包含网页主要内容", "设置网页样式", "定义网页结构"],
+                        correct: 1,
+                        explanation: "<body>标签包含所有在网页上显示的内容。"
+                    },
+                    {
+                        question: "哪个标签用来创建表格？",
+                        options: ["<table>", "<grid>", "<sheet>", "<form>"],
+                        correct: 0,
+                        explanation: "<table>标签用于创建表格，配合<tr>、<td>等标签使用。"
+                    },
+                    {
+                        question: "HTML标签属性值应该用哪种引号？",
+                        options: ["只能用双引号", "只能用单引号", "单引号或双引号都可以", "不需要引号"],
+                        correct: 2,
+                        explanation: "HTML属性值可以用单引号或双引号包围。"
+                    },
+                    {
+                        question: "哪个标签用来创建表单输入框？",
+                        options: ["<input>", "<textbox>", "<field>", "<form>"],
+                        correct: 0,
+                        explanation: "<input>标签用于创建各种表单输入元素。"
+                    },
+                    {
+                        question: "HTML是编程语言吗？",
+                        options: ["是，是高级编程语言", "不是，是标记语言", "是脚本语言", "是样式语言"],
+                        correct: 1,
+                        explanation: "HTML是标记语言，不是编程语言，用于定义内容结构。"
+                    },
+                    {
+                        question: "哪个标签用来换行？",
+                        options: ["<br>", "<newline>", "<line>", "<enter>"],
+                        correct: 0,
+                        explanation: "<br>标签用于插入换行符，是单个标签。"
+                    },
+                    {
+                        question: "CSS样式通常放在HTML的哪个部分？",
+                        options: ["只能在<body>中", "只能在<head>中", "<head>或外部文件", "只能在<html>中"],
+                        correct: 2,
+                        explanation: "CSS可以放在<head>的<style>标签中，或链接外部CSS文件。"
+                    },
+                    {
+                        question: "哪个属性用来设置图片的替代文字？",
+                        options: ["title", "alt", "text", "description"],
+                        correct: 1,
+                        explanation: "alt属性提供图片的替代文字，对无障碍访问很重要。"
+                    },
+                        {
+                        question: "HTML5新增的语义化标签是？",
+                        options: ["<div>和<span>", "<header>和<footer>", "<table>和<form>", "<p>和<h1>"],
+                        correct: 1,
+                        explanation: "HTML5新增了<header>、<footer>、<article>等语义化标签。"
+                    }
+                ]
+            },
+            advanced: {
+                timeLimit: 900, // 15分钟
+                questions: [
+                    {
+                        question: "以下哪个不是HTML5新增的语义化标签？",
+                        options: ["<article>", "<section>", "<div>", "<nav>"],
+                        correct: 2,
+                        explanation: "<div>是HTML4就有的标签，不是HTML5新增的语义化标签。"
+                    },
+                    {
+                        question: "HTML中哪个属性可以提高网页的SEO效果？",
+                        options: ["style", "class", "title", "alt"],
+                        correct: 3,
+                        explanation: "alt属性不仅对无障碍访问重要，也有助于搜索引擎理解图片内容。"
+                    },
+                    {
+                        question: "在HTML中，如何正确嵌套标签？",
+                        options: ["可以交叉嵌套", "必须正确闭合", "顺序不重要", "只能嵌套一层"],
+                        correct: 1,
+                        explanation: "HTML标签必须正确嵌套和闭合，不能交叉嵌套。"
+                    },
+                    {
+                        question: "哪个HTTP状态码表示页面未找到？",
+                        options: ["200", "301", "404", "500"],
+                        correct: 2,
+                        explanation: "404状态码表示请求的资源不存在，即页面未找到。"
+                    },
+                    {
+                        question: "HTML中的字符编码应该设置在哪个标签中？",
+                        options: ["<title>", "<meta>", "<head>", "<html>"],
+                        correct: 1,
+                        explanation: "字符编码通过<meta charset='UTF-8'>设置在<head>部分。"
+                    },
+                    {
+                        question: "以下哪种链接类型最适合用于网站导航？",
+                        options: ["外部链接", "内部链接", "锚点链接", "邮件链接"],
+                        correct: 1,
+                        explanation: "内部链接用于连接网站内不同页面，最适合网站导航。"
+                    },
+                    {
+                        question: "HTML中的viewport元标签主要用于什么？",
+                        options: ["设置网页标题", "控制响应式布局", "定义字符编码", "设置关键词"],
+                        correct: 1,
+                        explanation: "viewport元标签控制页面在移动设备上的显示方式。"
+                    },
+                    {
+                        question: "在HTML中，如何创建一个下载链接？",
+                        options: ["使用download属性", "使用target属性", "使用rel属性", "无法实现"],
+                        correct: 0,
+                        explanation: "download属性可以让链接点击时下载文件而不是打开。"
+                    },
+                    {
+                        question: "HTML中的rel='noopener'属性主要用于什么？",
+                        options: ["提高性能", "安全考虑", "SEO优化", "样式控制"],
+                        correct: 1,
+                        explanation: "rel='noopener'用于安全考虑，防止新窗口的恶意操作。"
+                    },
+                    {
+                        question: "以下哪个不是合法的HTML注释格式？",
+                        options: ["<!-- 注释 -->", "<!- 注释 ->", "<!--注释-->", "<!-- 注释内容 -->"],
+                        correct: 1,
+                        explanation: "<!- 注释 ->不是合法的HTML注释格式，缺少必要的符号。"
+                    },
+                    {
+                        question: "HTML中的data-*属性有什么作用？",
+                        options: ["设置样式", "存储自定义数据", "定义行为", "控制布局"],
+                        correct: 1,
+                        explanation: "data-*属性用于在HTML元素上存储自定义数据。"
+                    },
+                    {
+                        question: "在HTML中，如何优化图片加载性能？",
+                        options: ["使用大图片", "压缩图片文件", "不使用图片", "只用PNG格式"],
+                        correct: 1,
+                        explanation: "压缩图片文件可以显著减少加载时间，提高网页性能。"
+                    },
+                    {
+                        question: "HTML中的lazy loading是通过哪个属性实现的？",
+                        options: ["loading", "lazy", "defer", "async"],
+                        correct: 0,
+                        explanation: "loading='lazy'属性可以实现图片的懒加载。"
+                    },
+                    {
+                        question: "以下哪个不是HTML5表单输入类型？",
+                        options: ["email", "date", "color", "varchar"],
+                        correct: 3,
+                        explanation: "varchar不是HTML5的表单输入类型，它是数据库类型。"
+                    },
+                    {
+                        question: "HTML中的微数据(microdata)主要用于什么？",
+                        options: ["样式设计", "语义化标记", "数据存储", "性能优化"],
+                        correct: 1,
+                        explanation: "微数据用于为内容添加语义化标记，帮助搜索引擎理解。"
+                    },
+                    {
+                        question: "在HTML中，如何正确处理特殊字符？",
+                        options: ["直接输入", "使用实体编码", "忽略它们", "用图片代替"],
+                        correct: 1,
+                        explanation: "特殊字符应该使用HTML实体编码，如&lt;表示<。"
+                    },
+                    {
+                        question: "HTML中的Web Storage包括哪些？",
+                        options: ["Cookie和Session", "LocalStorage和SessionStorage", "Cache和Buffer", "Database和Table"],
+                        correct: 1,
+                        explanation: "Web Storage包括LocalStorage和SessionStorage两种机制。"
+                    },
+                    {
+                        question: "以下哪个API不是HTML5新增的？",
+                        options: ["Geolocation", "WebSocket", "Canvas", "XMLHttpRequest"],
+                        correct: 3,
+                        explanation: "XMLHttpRequest在HTML5之前就已经存在，其他都是HTML5新增。"
+                    },
+                    {
+                        question: "HTML中的渐进式Web应用(PWA)主要通过什么实现？",
+                        options: ["Service Worker", "Web Worker", "Shared Worker", "Worker"],
+                        correct: 0,
+                        explanation: "Service Worker是PWA的核心技术，提供离线功能等。"
+                    },
+                    {
+                        question: "在HTML开发中，什么是语义化的主要好处？",
+                        options: ["代码更短", "性能更好", "可读性和可维护性", "兼容性更强"],
+                        correct: 2,
+                        explanation: "语义化提高了代码的可读性和可维护性，对SEO也有帮助。"
+                    }
+                ]
+            }
+        };
+
+        let currentTest = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let testTimer = null;
+        let timeRemaining = 0;
+
+        // 开始测试
+        function startTest(testType) {
+            currentTest = testData[testType];
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            timeRemaining = currentTest.timeLimit;
+            
+            // 隐藏模式选择，显示测验界面
+            document.getElementById('test-modes').style.display = 'none';
+            document.getElementById('quiz-interface').style.display = 'block';
+            
+            // 初始化测验
+            initQuiz();
+            startTimer();
+            
+            showMessage('测试开始！加油！', 'success');
+        }
+
+        // 初始化测验
+        function initQuiz() {
+            loadQuestion();
+            updateProgress();
+        }
+
+        // 加载题目
+        function loadQuestion() {
+            const question = currentTest.questions[currentQuestionIndex];
+            
+            document.getElementById('question-number').textContent = `第 ${currentQuestionIndex + 1} 题`;
+            document.getElementById('question-text').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('answer-options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.innerHTML = `
+                    <span class="option-label">${String.fromCharCode(65 + index)}.</span>
+                    ${option}
+                `;
+                optionElement.onclick = () => selectAnswer(index, optionElement);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // 恢复之前选择的答案
+            if (userAnswers[currentQuestionIndex] !== undefined) {
+                const selectedOption = optionsContainer.children[userAnswers[currentQuestionIndex]];
+                selectedOption.classList.add('selected');
+            }
+            
+            updateNavigationButtons();
+        }
+
+        // 选择答案
+        function selectAnswer(answerIndex, element) {
+            // 清除之前的选择
+            document.querySelectorAll('.answer-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 选中当前选项
+            element.classList.add('selected');
+            userAnswers[currentQuestionIndex] = answerIndex;
+            
+            // 启用下一题按钮
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestionIndex < currentTest.questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+                updateProgress();
+            } else {
+                finishTest();
+            }
+        }
+
+        // 上一题
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+                updateProgress();
+            }
+        }
+
+        // 更新进度
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / currentTest.questions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = progress + '%';
+            document.getElementById('quiz-progress-text').textContent = 
+                `题目 ${currentQuestionIndex + 1} / ${currentTest.questions.length}`;
+        }
+
+        // 更新导航按钮
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = userAnswers[currentQuestionIndex] === undefined;
+            
+            if (currentQuestionIndex === currentTest.questions.length - 1) {
+                nextBtn.innerHTML = '完成测试 <i class="fas fa-check"></i>';
+            } else {
+                nextBtn.innerHTML = '下一题 <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        // 开始计时器
+        function startTimer() {
+            testTimer = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('quiz-timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // 时间少于1分钟时变红
+            if (timeRemaining <= 60) {
+                document.getElementById('quiz-timer').style.background = 'linear-gradient(45deg, #f44336, #ff5722)';
+            }
+        }
+
+        // 完成测试
+        function finishTest() {
+            clearInterval(testTimer);
+            
+            // 计算分数
+            let correctCount = 0;
+            currentTest.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const score = Math.round((correctCount / currentTest.questions.length) * 100);
+            
+            // 显示结果
+            showResults(score, correctCount);
+        }
+
+        // 显示结果
+        function showResults(score, correctCount) {
+            document.getElementById('quiz-interface').style.display = 'none';
+            document.getElementById('results-interface').style.display = 'block';
+            
+            document.getElementById('final-score').textContent = score;
+            
+            // 创建成绩分析图表
+            createPerformanceChart(correctCount, currentTest.questions.length - correctCount);
+            
+            // 保存成绩
+            localStorage.setItem('htmlTestScore', score);
+            
+            showMessage(`测试完成！你的得分：${score}分`, 'success');
+        }
+
+        // 创建成绩分析图表
+        function createPerformanceChart(correct, incorrect) {
+            const data = [{
+                values: [correct, incorrect],
+                labels: ['正确', '错误'],
+                type: 'pie',
+                hole: 0.4,
+                marker: {
+                    colors: ['#4caf50', '#f44336']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const layout = {
+                title: '答题情况分析',
+                showlegend: false,
+                margin: { t: 50, b: 50, l: 50, r: 50 },
+                font: { family: 'Poppins, sans-serif' }
+            };
+
+            Plotly.newPlot('performance-chart', data, layout, {displayModeBar: false});
+        }
+
+        // 查看学习报告
+        function viewReport() {
+            document.getElementById('results-interface').style.display = 'none';
+            document.getElementById('learning-report').style.display = 'block';
+        }
+
+        // 重新测试
+        function retakeTest() {
+            document.getElementById('results-interface').style.display = 'none';
+            document.getElementById('learning-report').style.display = 'none';
+            document.getElementById('test-modes').style.display = 'grid';
+            
+            // 重置状态
+            currentTest = null;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            
+            showMessage('准备重新测试！', 'info');
+        }
+
+        // 返回首页
+        function goToHome() {
+            window.location.href = 'index.html?completed=assessment';
+        }
+
+        // 显示消息
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : '#2196f3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-size: 14px;
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // 页面加载时检查是否已完成所有课程
+        window.addEventListener('load', () => {
+            const completedLessons = [
+                localStorage.getItem('lesson1Completed'),
+                localStorage.getItem('lesson2Completed'),
+                localStorage.getItem('lesson3Completed'),
+                localStorage.getItem('lesson4Completed'),
+                localStorage.getItem('lesson5Completed')
+            ];
+            
+            const allCompleted = completedLessons.every(Boolean);
+            
+            if (allCompleted) {
+                showMessage('🎉 太棒了！你已经完成了所有课程学习！', 'success');
+            }
+        });
+    </script>
+</body>
+</html>
